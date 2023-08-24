@@ -1,8 +1,7 @@
 <template>
     <div class="fixed flex justify-center h-full w-full top-0 left-0 items-center bg-transparentBg z-10">
         <div class="flex justify-center items-center text-white">
-            <div class="w-full max-w-xs">
-                <form class="bg-gray-700 shadow-md rounded-xl px-8 pt-6 pb-8 mb-4">
+                <form class="w-96 bg-gray-700 shadow-md rounded-xl px-8 pt-6 pb-8 mb-4">
                     <div class="mb-4">
                         <label class="block text-lg font-bold mb-2">
                             Task Name
@@ -27,7 +26,6 @@
                         <Button :text="'Cancel'" class="bg-red-600 hover:bg-red-500 text-white" type="button" @click="cancel"/>
                     </div>
                 </form>
-            </div>
         </div>
     </div>
 </template>
