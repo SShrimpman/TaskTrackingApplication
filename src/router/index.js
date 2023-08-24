@@ -1,8 +1,10 @@
 import { createRouter, createWebHistory } from "vue-router";
-import HelloWorld from "../components/HelloWorld.vue"
+import InitialPage from "../components/InitialPage.vue"
+import TaskDashboard from "../components/TaskDashboard.vue"
 
 const routes = [
-    { path: '/', name: 'HelloWorld', component: HelloWorld },
+    { path: '/', name: 'InitialPage', component: InitialPage },
+    { path: '/dashboard', name: 'Dashboard', component: TaskDashboard },
 ]
 
 const router = createRouter({
