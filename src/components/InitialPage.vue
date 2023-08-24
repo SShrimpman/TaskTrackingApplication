@@ -1,6 +1,6 @@
 <template>
   <div class="flex justify-center h-screen">
-    <div class="grid content-center space-y-20">
+    <div class="grid content-center gap-20">
       <div class="text-white text-5xl">
         Task APP
       </div>
