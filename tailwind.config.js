@@ -11,9 +11,12 @@ export default {
       },
       width: {
         '700': '700px',
+      },
+      boxShadow: {
+        'button': '0 0px 10px 0px rgba(0, 0, 0, 0.3)',
       }
     },
   },
-  plugins: [],
+  plugins: [require("daisyui")],
 }
 
