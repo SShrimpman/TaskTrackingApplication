@@ -5,20 +5,23 @@
         Task APP
       </div>
       <div class="flex justify-center">
-        <button class="bg-red-700 hover:bg-red-500 text-white rounded-lg p-3" @click="dashboard">
-          Enter ->
-        </button>
+        <Button :text="'Enter ->'" class="bg-red-700 hover:bg-red-500 text-white" @click="dashboard"/>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-export default {
-  methods: {
-    dashboard() {
-      this.$router.push('Dashboard');
+import Button from './widgets/Button.vue';
+
+  export default {
+    components: {
+      Button
+    },
+    methods: {
+      dashboard() {
+        this.$router.push('Dashboard');
+      }
     }
   }
-}
 </script>

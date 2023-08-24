@@ -3,5 +3,6 @@ export default class addTask{
       this.id = null
       this.name = ''
       this.deadline = ''
+      this.completed = false
     }
   }

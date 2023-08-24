@@ -1,16 +1,21 @@
 <template>
         <div class="mx-auto w-700 mt-36 text-white">
-            <button class="bg-green-500 p-2 rounded-lg mb-10" @click="toggleCreate">Create New Task</button>
-            <div class="grid grid-cols-3 text-center rounded-t-lg bg-red-500 h-24 content-center">
-                <div v-for="title in titles" class="font-lg font-bold text-xl"> {{ title.name }} </div>
-            </div>
-            <div class="bg-black rounded-b-lg">
-                <div v-for="task in getTasks" :key="task.id" class="grid grid-cols-3 w-full text-center h-24 content-center">
-                    <div>{{ task.name }}</div>
-                    <div>{{ task.deadline }}</div>
-                    <div class="space-x-2">
-                        <button class="bg-blue-700 p-1 rounded-md">Edit</button>
-                        <button class="bg-red-700 p-1 rounded-md">Delete</button>
+            <Button :text="'Create New Task'" class="text-white bg-green-700 mb-10 hover:bg-green-500" @click="toggleCreate"/>
+            <div class="rounded-lg">
+                <div class="grid grid-cols-4 text-center rounded-t-lg bg-red-500 h-24 content-center">
+                    <div v-for="title in titles" class="font-lg font-bold text-xl"> {{ title.name }} </div>
+                </div>
+                <div class="bg-black rounded-b-lg">
+                    <div v-for="task in getTasks" :key="task.id" class="grid grid-cols-4 w-full text-center h-24 content-center">
+                        <div>
+                            <input type="checkbox" class="checkbox" v-model="task.completed">
+                        </div>
+                        <div>{{ task.name }}</div>
+                        <div>{{ task.deadline }}</div>
+                        <div class="space-x-2">
+                            <Button :text="'Edit'" class="btn-sm text-white bg-blue-700 hover:bg-blue-500"/>
+                            <Button :text="'Delete'" class="btn-sm text-white bg-red-700 hover:bg-red-500"/>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -21,6 +26,7 @@
 <script>
 import { taskStore } from '../store/taskStore';
 import { mapState } from 'pinia'
+import Button from './widgets/Button.vue';
 import CreatePop from './popups/Create.vue'
 
     export default {
@@ -29,11 +35,13 @@ import CreatePop from './popups/Create.vue'
             return { taskStoreT }
         },
         components: {
+            Button,
             CreatePop
         },
         data() {
             return {
                 titles: [
+                    { name: "To Do" },
                     { name: "Name" },
                     { name: "Deadline" },
                     { name: "Actions" }
