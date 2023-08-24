@@ -13,6 +13,13 @@ export const taskStore = defineStore('taskStore', {
         getTasks: (state) => state.tasks,
     },
     actions: {
-        
+        add(task) {
+            try {
+                task.id = uuidv4();
+                this.tasks.push(task);
+            } catch (error) {
+                throw error
+            }
+        },
     }
 })

@@ -1,6 +1,6 @@
 <template>
         <div class="mx-auto w-700 mt-36 text-white">
-            <button class="bg-green-500 p-2 rounded-lg mb-10">Create New Task</button>
+            <button class="bg-green-500 p-2 rounded-lg mb-10" @click="toggleCreate">Create New Task</button>
             <div class="grid grid-cols-3 text-center rounded-t-lg bg-red-500 h-24 content-center">
                 <div v-for="title in titles" class="font-lg font-bold text-xl"> {{ title.name }} </div>
             </div>
@@ -15,28 +15,46 @@
                 </div>
             </div>
         </div>
+        <CreatePop v-if="openCreate" @newTask="createTask" @cancelCreate="closeCreate"/>
 </template>
 
 <script>
 import { taskStore } from '../store/taskStore';
 import { mapState } from 'pinia'
+import CreatePop from './popups/Create.vue'
 
     export default {
         setup() {
-        const taskStoreT = taskStore()
-        return { taskStoreT }
-    },
+            const taskStoreT = taskStore()
+            return { taskStoreT }
+        },
+        components: {
+            CreatePop
+        },
         data() {
             return {
                 titles: [
                     { name: "Name" },
                     { name: "Deadline" },
                     { name: "Actions" }
-                ]
+                ],
+                openCreate: false
             }
         },
         computed: {
             ...mapState(taskStore, ['getTasks'])
+        },
+        methods: {
+            toggleCreate() {
+                this.openCreate = !this.openCreate
+            },
+            closeCreate() {
+                this.openCreate = false
+            },
+            createTask(newTask) {
+                this.taskStoreT.add(newTask)
+                this.closeCreate()
+            }
         }
     }
 </script>
