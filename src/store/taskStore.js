@@ -21,5 +21,9 @@ export const taskStore = defineStore('taskStore', {
                 throw error
             }
         },
+        delete(task) {
+            const taskToDelete = this.tasks.map(task => task.id).indexOf(task.id)
+            this.tasks.splice(taskToDelete, 1);
+        }
     }
 })
