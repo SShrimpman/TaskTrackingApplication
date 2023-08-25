@@ -1,19 +1,22 @@
 <template>
         <div class="mx-auto w-700 mt-36 text-white">
-            <Button :text="'Create New Task'" class="text-white bg-green-700 mb-10 hover:bg-green-500" @click="toggleCreate"/>
-            <div class="dropdown dropdown-hover ml-3">
-                <label tabindex="0" class="btn m-1">Hover</label>
-                <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
-                    <li><a>Item 1</a></li>
-                    <li><a>Item 2</a></li>
-                </ul>
+            <div class="flex justify-between items-center mb-10">
+                <Button :text="'Create New Task'" class="text-white bg-green-700 hover:bg-green-500" @click="toggleCreate"/>
+                <div class="dropdown" @click="toggleDropdown">
+                    <label tabindex="0" class="btn m-1">{{ selectedFilter }}</label>
+                    <ul v-if="dropdownOpen" tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+                        <li @click="selectFilter('All')"><a>All</a></li>
+                        <li @click="selectFilter('To Do')"><a>To Do</a></li>
+                        <li @click="selectFilter('Done')"><a>Done</a></li>
+                    </ul>
+                </div>
             </div>
             <div class="rounded-lg">
                 <div class="grid grid-cols-4 text-center rounded-t-lg bg-red-500 h-24 content-center">
                     <div v-for="title in titles" class="font-lg font-bold text-xl"> {{ title.name }} </div>
                 </div>
                 <div class="bg-black rounded-b-lg">
-                    <div v-for="task in getTasks" :key="task.id" class="grid grid-cols-4 w-full text-center h-24 content-center">
+                    <div v-for="task in filteredTasks" :key="task.id" class="grid grid-cols-4 w-full text-center h-24 content-center">
                         <div>
                             <input type="checkbox" class="checkbox" v-model="task.completed">
                         </div>
@@ -56,14 +59,30 @@ import DeletePop from './popups/Delete.vue';
                     { name: "Deadline" },
                     { name: "Actions" }
                 ],
+                dropdownOpen: false,
+                selectedFilter: 'Filter by',
                 openCreate: false,
                 openDelete: false
             }
         },
         computed: {
-            ...mapState(taskStore, ['getTasks'])
+            ...mapState(taskStore, ['getTasks']),
+            filteredTasks() {
+                if (this.selectedFilter === 'To Do') {
+                    return this.getTasks.filter(task => !task.completed);
+                } else if (this.selectedFilter === 'Done') {
+                    return this.getTasks.filter(task => task.completed);
+                }
+                return this.getTasks;
+            },
         },
         methods: {
+            toggleDropdown() {
+                this.dropdownOpen = !this.dropdownOpen;
+            },
+            selectFilter(filter) {
+                this.selectedFilter = filter;
+            },
             toggleCreate() {
                 this.openCreate = !this.openCreate
             },
