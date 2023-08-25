@@ -21,6 +21,13 @@ export const taskStore = defineStore('taskStore', {
                 throw error
             }
         },
+        update(task) {
+            try {
+                this.tasks[this.tasks.findIndex(taskFind => taskFind.id == task.id)] = task
+            } catch (error) {
+                throw error
+            }
+        },
         delete(task) {
             const taskToDelete = this.tasks.map(task => task.id).indexOf(task.id)
             this.tasks.splice(taskToDelete, 1);
