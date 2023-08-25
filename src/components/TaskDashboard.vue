@@ -1,6 +1,7 @@
 <template>
-        <div class="mx-auto w-700 mt-36 text-white">
-            <div class="flex justify-between items-center mb-10">
+    <div class="grid content-center mx-auto w-600 text-white h-screen">
+        <div class="absolute mt-44 ml-8">
+            <div class="flex justify-between">
                 <Button :text="'Create New Task'" class="text-white bg-green-700 hover:bg-green-500" @click="toggleCreate"/>
                 <div class="dropdown" @click="toggleDropdown">
                     <label tabindex="0" class="btn m-1 w-28">{{ selectedFilter }}</label>
@@ -12,11 +13,11 @@
                 </div>
             </div>
             <div class="rounded-lg">
-                <div class="grid grid-cols-4 text-center rounded-t-lg bg-red-500 h-24 content-center">
-                    <div v-for="title in titles" class="font-lg font-bold text-xl"> {{ title.name }} </div>
+                <div class="grid grid-cols-4 text-center rounded-t-lg h-24 content-center">
+                    <div v-for="title in titles" class="font-lg font-bold text-xl text-black"> {{ title.name }} </div>
                 </div>
-                <div class="bg-black rounded-b-lg">
-                    <div v-for="task in filteredTasks" :key="task.id" class="grid grid-cols-4 w-full text-center h-24 content-center">
+                <div class="rounded-b-lg text-black">
+                    <div v-for="task in paginatedTasks" :key="task.id" class="grid grid-cols-4 w-full text-center h-24 content-center">
                         <div>
                             <input type="checkbox" class="checkbox checkbox-success" v-model="task.completed">
                         </div>
@@ -29,10 +30,16 @@
                     </div>
                 </div>
             </div>
+            <div class="flex justify-center space-x-4 mt-10">
+                <Button :text="'Previous'" class="text-white bg-blue-700 hover:bg-blue-500" :class="{ 'hidden': currentPage === 1}" @click="goToPage(currentPage - 1)"/>
+                <span class="flex items-center text-black">{{ currentPage }} / {{ totalPages }}</span>
+                <Button :text="'Next'" class="text-white bg-blue-700 hover:bg-blue-500" :class="{ 'hidden': currentPage === totalPages}" @click="goToPage(currentPage + 1)"/>
+            </div>
         </div>
-        <CreatePop v-if="openCreate" @newTask="createTask" @cancelCreate="toggleCreate"/>
-        <EditPop v-if="openEdit" :taskToUpdate="taskToUpdate" @updatedTask="updateTask" @cancelEdit="toggleEdit"/>
-        <DeletePop v-if="openDelete" :taskToDelete="taskToDelete" @deleteTask="deleteTask" @cancelDelete="toggleDelete"/>
+    </div>
+    <CreatePop v-if="openCreate" @newTask="createTask" @cancelCreate="toggleCreate"/>
+    <EditPop v-if="openEdit" :taskToUpdate="taskToUpdate" @updatedTask="updateTask" @cancelEdit="toggleEdit"/>
+    <DeletePop v-if="openDelete" :taskToDelete="taskToDelete" @deleteTask="deleteTask" @cancelDelete="toggleDelete"/>
 </template>
 
 <script>
@@ -67,7 +74,13 @@ import EditPop from './popups/Edit.vue';
                 openCreate: false,
                 openDelete: false,
                 openEdit: false,
+                create: true,
+                currentPage: 1,
+                itemsPerPage: 5,
             }
+        },
+        mounted() {
+            console.log(this.openCreate)
         },
         computed: {
             ...mapState(taskStore, ['getTasks']),
@@ -79,8 +92,21 @@ import EditPop from './popups/Edit.vue';
                 }
                 return this.getTasks;
             },
+            paginatedTasks() {
+                const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+                const endIndex = startIndex + this.itemsPerPage;
+                return this.filteredTasks.slice(startIndex, endIndex);
+            },
+            totalPages() {
+                return Math.ceil(this.filteredTasks.length / this.itemsPerPage);
+            },
         },
         methods: {
+            goToPage(page) {
+                if (page >= 1 && page <= this.totalPages) {
+                    this.currentPage = page;
+                }
+            },
             toggleDropdown() {
                 this.dropdownOpen = !this.dropdownOpen;
             },
@@ -103,8 +129,12 @@ import EditPop from './popups/Edit.vue';
                 this.toggleCreate()
             },
             deleteTask(taskToDelete) {
-                this.taskStoreT.delete(taskToDelete)
-                this.toggleDelete()
+                const wasLastTaskOnPage = this.filteredTasks.length % this.itemsPerPage === 1;
+                this.taskStoreT.delete(taskToDelete);
+                if (wasLastTaskOnPage && this.currentPage > 1) {
+                    this.currentPage -= 1;
+                }
+                this.toggleDelete();
             },
             updateTask(taskToUpdate) {
                 this.taskStoreT.update(taskToUpdate)
