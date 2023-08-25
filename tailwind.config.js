@@ -10,6 +10,7 @@ export default {
         'transparentBg': 'rgba(0,0,0,.4)',
       },
       width: {
+        '500': '500px',
         '700': '700px',
       },
       boxShadow: {
