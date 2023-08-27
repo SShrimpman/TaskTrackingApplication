@@ -1,40 +1,41 @@
 <template>
-    <div class="grid content-center mx-auto w-600 text-white h-screen">
-        <div class="absolute mt-44 ml-8">
-            <div class="flex justify-between">
-                <Button :text="'Create New Task'" class="text-white bg-green-700 hover:bg-green-500" @click="toggleCreate"/>
-                <div class="dropdown" @click="toggleDropdown">
-                    <label tabindex="0" class="btn m-1 w-28">{{ selectedFilter }}</label>
-                    <ul v-if="dropdownOpen" tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-28">
-                        <li @click="selectFilter('All')"><a>All</a></li>
-                        <li @click="selectFilter('To Do')"><a>To Do</a></li>
-                        <li @click="selectFilter('Done')"><a>Done</a></li>
-                    </ul>
-                </div>
+    <div class="mx-auto md:px-5 lg:w-580 xl:w-750 2xl:w-900 md:pt-64 lg:pt-14 xl:pt-40">
+        <div v-if="toDoList" class="flex justify-center text-black text-5xl font-semibold italic py-10">
+            To Do List
+        </div>
+        <div class="flex justify-between">
+            <Button :text="'Create New Task'" class="text-white bg-green-700 hover:bg-green-500" @click="toggleCreate"/>
+            <div class="dropdown" @click="toggleDropdown">
+                <label tabindex="0" class="btn m-1 w-28">{{ selectedFilter }}</label>
+                <ul v-if="dropdownOpen" tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-28">
+                    <li @click="selectFilter('All')"><a>All</a></li>
+                    <li @click="selectFilter('To Do')"><a>To Do</a></li>
+                    <li @click="selectFilter('Done')"><a>Done</a></li>
+                </ul>
             </div>
-            <div class="rounded-lg">
-                <div class="grid grid-cols-4 text-center rounded-t-lg h-24 content-center">
-                    <div v-for="title in titles" class="font-lg font-bold text-xl text-black"> {{ title.name }} </div>
-                </div>
-                <div class="rounded-b-lg text-black">
-                    <div v-for="task in paginatedTasks" :key="task.id" class="grid grid-cols-4 w-full text-center h-24 content-center">
-                        <div>
-                            <input type="checkbox" class="checkbox checkbox-success" v-model="task.completed">
-                        </div>
-                        <div>{{ task.name }}</div>
-                        <div>{{ task.deadline }}</div>
-                        <div class="space-x-2">
-                            <Button :text="'Edit'" class="btn-sm text-white bg-blue-700 hover:bg-blue-500" @click="toggleEdit(task)"/>
-                            <Button :text="'Delete'" class="btn-sm text-white bg-red-700 hover:bg-red-500" @click="toggleDelete(task)"/>
-                        </div>
+        </div>
+        <div class="rounded-lg">
+            <div class="grid grid-cols-4 text-center rounded-t-lg h-24 content-center">
+                <div v-for="title in titles" class="font-lg font-bold text-xl text-black"> {{ title.name }} </div>
+            </div>
+            <div class="rounded-b-lg text-black">
+                <div v-for="task in paginatedTasks" :key="task.id" class="grid grid-cols-4 w-full text-center h-24 content-center">
+                    <div>
+                        <input type="checkbox" class="checkbox checkbox-success" v-model="task.completed">
+                    </div>
+                    <div>{{ task.name }}</div>
+                    <div>{{ task.deadline }}</div>
+                    <div class="space-x-2">
+                        <Button :text="'Edit'" class="btn-sm text-white bg-blue-700 hover:bg-blue-500" @click="toggleEdit(task)"/>
+                        <Button :text="'Delete'" class="btn-sm text-white bg-red-700 hover:bg-red-500" @click="toggleDelete(task)"/>
                     </div>
                 </div>
             </div>
-            <div class="flex justify-center space-x-4 mt-10">
-                <Button :text="'Previous'" class="text-white bg-blue-700 hover:bg-blue-500" :class="{ 'hidden': currentPage === 1}" @click="goToPage(currentPage - 1)"/>
-                <span class="flex items-center text-black">{{ currentPage }} / {{ totalPages }}</span>
-                <Button :text="'Next'" class="text-white bg-blue-700 hover:bg-blue-500" :class="{ 'hidden': currentPage === totalPages}" @click="goToPage(currentPage + 1)"/>
-            </div>
+        </div>
+        <div class="flex justify-center space-x-4 md:mt-10 lg:mt-0 xl:mt-10">
+            <Button :text="'Previous'" class="text-white bg-blue-700 hover:bg-blue-500" :class="{ 'hidden': currentPage === 1}" @click="goToPage(currentPage - 1)"/>
+            <span class="flex items-center text-black">{{ currentPage }} / {{ totalPages }}</span>
+            <Button :text="'Next'" class="text-white bg-blue-700 hover:bg-blue-500" :class="{ 'hidden': currentPage === totalPages}" @click="goToPage(currentPage + 1)"/>
         </div>
     </div>
     <CreatePop v-if="openCreate" @newTask="createTask" @cancelCreate="toggleCreate"/>
@@ -76,11 +77,24 @@ import EditPop from './popups/Edit.vue';
                 openEdit: false,
                 create: true,
                 currentPage: 1,
-                itemsPerPage: 5,
+                itemsPerPage: 3,
+                toDoList: true
             }
         },
-        mounted() {
-            console.log(this.openCreate)
+        created() {
+            if (window.innerWidth >= 768 && window.innerWidth < 820) {
+                this.itemsPerPage = 4;
+                this.toDoList = false;
+            } else if (window.innerWidth >= 820 && window.innerWidth < 1024) {
+                this.itemsPerPage = 4;
+                this.toDoList = false;
+            } else if (window.innerWidth >= 1024 && window.innerWidth <= 1280) {
+                this.itemsPerPage = 3;
+                this.toDoList = false;
+            } else if (window.innerWidth > 1280) {
+                this.itemsPerPage = 5;
+                this.toDoList = false;
+            }
         },
         computed: {
             ...mapState(taskStore, ['getTasks']),
