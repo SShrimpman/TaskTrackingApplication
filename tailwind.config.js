@@ -7,14 +7,16 @@ export default {
   theme: {
     extend: {
       backgroundImage: {
-        'backgroundImage': "url('./assets/background.jpg')"
+        'backgroundImage': "url('./assets/background.png')",
       },
       colors: {
+        'whiteBG': '#E7E4E1',
         'transparentBg': 'rgba(0,0,0,.4)',
       },
       width: {
-        '500': '500px',
-        '600': '600px',
+        '580': '580px',
+        '750': '750px',
+        '900': '900px',
       },
       boxShadow: {
         'button': '0 0px 10px 0px rgba(0, 0, 0, 0.3)',
