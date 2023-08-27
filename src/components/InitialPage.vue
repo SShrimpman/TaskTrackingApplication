@@ -1,7 +1,7 @@
 <template>
-  <div class="flex justify-center h-screen">
-    <div class="grid content-center gap-20">
-      <div class="text-5xl text-black">
+  <div class="flex justify-center">
+    <div class="grid content-center gap-40 h-screen">
+      <div class="text-7xl italic bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-transparent bg-clip-text">
         Task APP
       </div>
       <div class="flex justify-center">
