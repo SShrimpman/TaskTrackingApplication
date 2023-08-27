@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-backgroundImage bg-cover bg-center">
+  <div class="bg-cover bg-whiteBG md:bg-backgroundImage bg-center h-screen">
     <RouterView />
   </div>
 </template>
